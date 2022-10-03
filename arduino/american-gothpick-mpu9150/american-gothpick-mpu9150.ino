@@ -97,14 +97,14 @@ void loop()
     //Serial.print(MPU.m_fusedEulerPose);
 
     if (digitalRead(BUTTON_PLAYER_1) == HIGH) {
-      Serial.print(" P1_TRUE");
+      Serial.print(" 1T");
     } else {
-      Serial.print(" P1_FALSE");
+      Serial.print(" 1F");
     }
     if (digitalRead(BUTTON_PLAYER_2) == HIGH) {
-      Serial.print(" P2_TRUE");
+      Serial.print(" 2T");
     } else {
-      Serial.print(" P2_FALSE");
+      Serial.print(" 2F");
     }
     Serial.println("");
   }
