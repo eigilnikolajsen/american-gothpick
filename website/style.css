@@ -13,3 +13,29 @@ body {
 :root {
     --var-color: #272a35;
 }
+
+#game_container {
+    display: grid;
+}
+
+#game_container>section {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#game_img_container {
+    display: grid;
+}
+
+#game_img_container>img {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+#game_img_greb {
+    transform-origin: 51.25% 57.96%;
+}
+
+#game_img_rive {
+    transform-origin: 29.28% 63.6%;
+}

@@ -12,16 +12,17 @@ let gyro = {
 
 const getGyroVariables = (val) => {
     let valSplit = val.split(' ');
-    if (valSplit.length < 7) return;
+    if (valSplit.length != 8) return;
+    console.log(valSplit)
     gyro.x = valSplit[1];
     gyro.y = valSplit[3];
     gyro.z = valSplit[5];
     valSplit[6].includes('1T') ? gyro.p1 = true : gyro.p1 = false;
     valSplit[7].includes('2T') ? gyro.p2 = true : gyro.p2 = false;
-    console.log(gyro)
 }
 
 document.querySelector('#serial_check').addEventListener('click', async() => {
+
     // Filter on devices with the Arduino Uno USB Vendor/Product IDs.
     const filters = [
         { usbVendorId: 0x2341, usbProductId: 0x0043 },
@@ -38,6 +39,10 @@ document.querySelector('#serial_check').addEventListener('click', async() => {
     const textDecoder = new TextDecoderStream();
     const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
     const reader = textDecoder.readable.getReader();
+
+    // Start the main animation loop
+    animationToggle = true;
+    animationLoop = window.requestAnimationFrame(mainLoop);
 
     // Listen to data coming from the serial device.
     let valuePrint = '';
@@ -64,3 +69,18 @@ document.querySelector('#serial_check').addEventListener('click', async() => {
         valuePrint = '';
     }
 });
+
+
+const mainLoop = () => {
+    console.log('loopers')
+    let greb = document.querySelector('#game_img_greb');
+    greb.style.transform = `rotate(${gyro.y}deg)`;
+
+    if (animationToggle) {
+        window.requestAnimationFrame(mainLoop)
+    } else {
+        window.cancelAnimationFrame(animationLoop)
+    }
+}
+let animationToggle = false;
+let animationLoop;
