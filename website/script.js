@@ -72,9 +72,11 @@ document.querySelector('#serial_check').addEventListener('click', async() => {
 
 
 const mainLoop = () => {
-    console.log('loopers')
+    //console.log('loopers')
     let greb = document.querySelector('#game_img_greb');
-    greb.style.transform = `rotate(${gyro.y}deg)`;
+    let rot = gyro.y;
+    if (gyro.z > 0) rot = 180 - gyro.y;
+    greb.style.transform = `rotate(${rot}deg)`;
 
     if (animationToggle) {
         window.requestAnimationFrame(mainLoop)
