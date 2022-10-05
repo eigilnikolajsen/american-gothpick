@@ -8,14 +8,16 @@ let gyro = {
         p: 0,
         r: 0,
         t: false,
-        s: true,
+        tPrev: false,
+        strike: true,
     },
     p2: {
         y: 0,
         p: 0,
         r: 0,
         t: false,
-        s: true,
+        tPrev: false,
+        strike: true,
     },
 }
 
@@ -64,6 +66,7 @@ document.querySelector('#serial_check').addEventListener('click', async() => {
 
     // Listen to data coming from the serial device.
     let valuePrint = '';
+    let consoleReady = true;
     while (true) {
         const { value, done } = await reader.read();
         if (done) {
@@ -84,7 +87,11 @@ document.querySelector('#serial_check').addEventListener('click', async() => {
         getGyroVariables(valuePrint);
 
         // print out values to the console
-        console.log(valuePrint.split('%'));
+        if (consoleReady && gyro.p1.r != 0) {
+            console.log('ARDUINO DATA READY');
+            consoleReady = false;
+        }
+        //console.log(valuePrint.split('%'));
 
         // Reset valuePrint before next loop
         valuePrint = '';
