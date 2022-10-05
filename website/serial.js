@@ -42,8 +42,10 @@ const getGyroVariables = (val) => {
     let gyroOutput = `player 1: yaw: ${gyro.p1.y}, pitch: ${gyro.p1.p}, roll: ${gyro.p1.r}, button: ${gyro.p1.t}. player 2: yaw: ${gyro.p2.y}, pitch: ${gyro.p2.p}, roll: ${gyro.p2.r}, button: ${gyro.p2.t}.`;
     //console.log(gyroOutput);
 }
+let connectButton = document.querySelector('#serial_check');
+connectButton.addEventListener('click', async() => {
 
-document.querySelector('#serial_check').addEventListener('click', async() => {
+    connectButton.textContent = 'waiting for connection...'
 
     // Filter on devices with the Arduino Uno USB Vendor/Product IDs.
     const filters = [
@@ -91,6 +93,7 @@ document.querySelector('#serial_check').addEventListener('click', async() => {
         // print out values to the console
         if (consoleReady && gyro.p1.r != 0) {
             console.log('ARDUINO DATA READY');
+            connectButton.style.visibility = 'hidden';
             consoleReady = false;
         }
         //console.log(valuePrint.split('%'));

@@ -8,18 +8,38 @@ let scenes = {
 
 const resetGame = () => {
     console.log('reset game');
+
+    gyro = {
+        p1: {
+            y: 0,
+            p: 0,
+            r: 0,
+            t: false,
+            tPrev: false,
+            strike: true,
+            score: 0,
+        },
+        p2: {
+            y: 0,
+            p: 0,
+            r: 0,
+            t: false,
+            tPrev: false,
+            strike: true,
+            score: 0,
+        },
+    }
 }
 
+
+// main code loop
 let timerStarted = false;
 let timeUp = false;
-
 const mainLoop = () => {
-    //console.log('main loop')
 
+    // hide vs show parents of the scenes in the DOM
     let curScene;
     let curSceneDOM;
-
-    // run
     for (const scene in scenes) {
 
         if (!scenes[scene]) {
@@ -33,9 +53,16 @@ const mainLoop = () => {
 
     }
 
+
+
+
+
+
     switch (curScene) {
 
-        // If we're on the loading screen
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ////                                       LOADING SCENE                                       ////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         case 'loading':
             console.log('loading scene');
 
@@ -56,7 +83,15 @@ const mainLoop = () => {
 
             break;
 
-            // If we're on the ready screen
+
+
+
+
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+            ////                                      TUTORIAL SCENE                                       ////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
         case 'tutorial':
             console.log('turorial scene');
 
@@ -73,15 +108,24 @@ const mainLoop = () => {
 
             break;
 
-            // If we're on the ready screen
+
+
+
+
+
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+            ////                                        READY SCENE                                        ////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
         case 'ready':
             console.log('ready scene');
 
-            let p1TextReady = curSceneDOM.querySelector('#ready_player1');
-            let p2TextReady = curSceneDOM.querySelector('#ready_player2');
+            let p1TextReady = curSceneDOM.querySelector('#ready_text1_player1');
+            let p2TextReady = curSceneDOM.querySelector('#ready_text2_player2');
 
-            gyro.p1.t ? p1TextReady.textContent = 'PLAYER 1 READY' : p1TextReady.textContent = 'PLAYER 1 WAITING...';
-            gyro.p2.t ? p2TextReady.textContent = 'PLAYER 2 READY' : p2TextReady.textContent = 'PLAYER 2 WAITING...';
+            gyro.p1.t ? p1TextReady.textContent = 'READY!' : p1TextReady.textContent = 'WAITING...';
+            gyro.p2.t ? p2TextReady.textContent = 'READY!' : p2TextReady.textContent = 'WAITING...';
 
             if (gyro.p1.t && !gyro.p1.tPrev && gyro.p2.t || gyro.p2.t && !gyro.p2.tPrev && gyro.p1.t) {
                 scenes.ready = false;
@@ -90,15 +134,31 @@ const mainLoop = () => {
 
             break;
 
-            // If we're on the game screen
+
+
+
+
+
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+            ////                                        GAME SCENE                                         ////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
         case 'game':
             console.log('game scene');
 
+
+
+
+            //////////////////////////////////////// CONTROL TIME ////////////////////////////////////////
+
+            // start timer
             if (!timerStarted) {
                 timerStarted = true;
                 timerFunction();
             };
 
+            // if time runs out
             if (timeUp) {
                 console.log('game finished');
                 console.log(`player 1 score: ${gyro.p1.score}`);
@@ -106,7 +166,11 @@ const mainLoop = () => {
                 break;
             }
 
-            // console.log('loopers')
+
+
+            //////////////////////////////////////// CONTROL WEAPONS ////////////////////////////////////////
+
+            // control the rotation of weapons
             let rive = curSceneDOM.querySelector('#game_rive_container');
             let greb = curSceneDOM.querySelector('#game_greb_container');
             let rotP1 = gyro.p1.r;
@@ -115,11 +179,15 @@ const mainLoop = () => {
             rive.style.transform = `rotate(${rotP1}deg)`;
             greb.style.transform = `rotate(${rotP2}deg)`;
 
+
+
+
+            //////////////////////////////////////// CONTROL STRIKES ////////////////////////////////////////
+
+            // don't allow players to strike unless 'cooldown'
+            // has passed since last strike
             let cooldown = 500;
             let forDur = 150;
-            let backDur = 300;
-            let forEase = 'cubicBezier(.7,-0.3,.8,1)';
-            let backEase = 'cubicBezier(.2,0,.7,1)';
 
             // player 1 stikes
             if (gyro.p1.t && !gyro.p1.tPrev && gyro.p1.strike) {
@@ -129,13 +197,7 @@ const mainLoop = () => {
                 console.log('p1 strikes. rotP1: ' + rotP1);
 
                 // P1 strike animation
-                anime({
-                    targets: '#game_rive',
-                    translateY: [
-                        { value: '-14vh', duration: forDur, easing: forEase },
-                        { value: 0, duration: backDur, easing: backEase },
-                    ],
-                });
+                strikeAnimation(1);
 
                 // check for a hit
                 setTimeout(checkForHit, forDur, 1);
@@ -153,13 +215,7 @@ const mainLoop = () => {
                 console.log('p2 strikes. rotP2: ' + rotP2);
 
                 // P2 strike animation
-                anime({
-                    targets: '#game_greb',
-                    translateY: [
-                        { value: '-4.6vh', duration: forDur, delay: 0, easing: forEase },
-                        { value: 0, duration: backDur, delay: 0, easing: backEase },
-                    ],
-                });
+                strikeAnimation(2);
 
                 // check for a hit
                 setTimeout(checkForHit, forDur, 2);
@@ -170,7 +226,14 @@ const mainLoop = () => {
 
             break;
 
-            // If we're on the finished screen
+
+
+
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+            ////                                      FINISHED SCENE                                       ////
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
         case 'finished':
             console.log('finished scene');
 
@@ -215,7 +278,34 @@ const checkForHit = (pNum) => {
             }
             break;
     }
+}
 
+const strikeAnimation = (pNum) => {
+    let forDur = 150;
+    let backDur = 300;
+    let forEase = 'cubicBezier(.7,-0.3,.8,1)';
+    let backEase = 'cubicBezier(.2,0,.7,1)';
+    switch (pNum) {
+        case 1:
+            anime({
+                targets: '#game_rive',
+                translateY: [
+                    { value: '-14vh', duration: forDur, easing: forEase },
+                    { value: 0, duration: backDur, easing: backEase },
+                ],
+            });
+            break;
+
+        case 2:
+            anime({
+                targets: '#game_greb',
+                translateY: [
+                    { value: '-4.6vh', duration: forDur, delay: 0, easing: forEase },
+                    { value: 0, duration: backDur, delay: 0, easing: backEase },
+                ],
+            });
+            break;
+    }
 }
 
 const timerFunction = () => {
