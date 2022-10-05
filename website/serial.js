@@ -8,12 +8,14 @@ let gyro = {
         p: 0,
         r: 0,
         t: false,
+        s: true,
     },
     p2: {
         y: 0,
         p: 0,
         r: 0,
         t: false,
+        s: true,
     },
 }
 
@@ -22,15 +24,15 @@ const getGyroVariables = (val) => {
     if (valSplit.length != 8) return;
 
     // player 1 (p1)
-    gyro.p1.y = valSplit[0];
-    gyro.p1.p = valSplit[1];
-    gyro.p1.r = valSplit[2];
+    gyro.p1.p = valSplit[0];
+    gyro.p1.r = valSplit[1];
+    gyro.p1.y = valSplit[2];
     valSplit[3].includes('1T') ? gyro.p1.t = true : gyro.p1.t = false;
 
     // player 2 (p2)
-    gyro.p2.y = valSplit[4];
-    gyro.p2.p = valSplit[5];
-    gyro.p2.r = valSplit[6];
+    gyro.p2.p = valSplit[4];
+    gyro.p2.r = valSplit[5];
+    gyro.p2.y = valSplit[6];
     valSplit[7].includes('2T') ? gyro.p2.t = true : gyro.p2.t = false;
 
     let gyroOutput = `player 1: yaw: ${gyro.p1.y}, pitch: ${gyro.p1.p}, roll: ${gyro.p1.r}, button: ${gyro.p1.t}. player 2: yaw: ${gyro.p2.y}, pitch: ${gyro.p2.p}, roll: ${gyro.p2.r}, button: ${gyro.p2.t}.`;
