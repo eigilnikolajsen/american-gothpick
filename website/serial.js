@@ -10,6 +10,7 @@ let gyro = {
         t: false,
         tPrev: false,
         strike: true,
+        score: 0,
     },
     p2: {
         y: 0,
@@ -18,6 +19,7 @@ let gyro = {
         t: false,
         tPrev: false,
         strike: true,
+        score: 0,
     },
 }
 
