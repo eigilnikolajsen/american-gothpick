@@ -10,8 +10,35 @@ body {
     user-select: none;
 }
 
+body {
+    overflow: hidden;
+}
+
 :root {
     --var-color: #272a35;
+}
+
+#serial_check {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: black;
+    border: none;
+    color: #555555;
+    font-size: 8px;
+    padding: 2px 5px;
+}
+
+#container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    background-color: black;
+    overflow: hidden;
 }
 
 #game_container {
@@ -30,6 +57,7 @@ body {
 #game_img_container>img {
     grid-column: 1;
     grid-row: 1;
+    height: 130%;
 }
 
 #game_img_greb {
