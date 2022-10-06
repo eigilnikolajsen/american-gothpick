@@ -74,6 +74,109 @@ body {
 
 
 /*/////////////////////////////////////////////////////////////////////////////////////////////////
+////                                         GAME SCENE                                        ////
+/////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#loading_container {
+    display: flex;
+    justify-content: center;
+}
+
+#loading_container>* {
+    position: absolute;
+}
+
+#loading_container>img {
+    height: 100vh;
+}
+
+#loading_press {
+    margin-top: 60vh;
+    font-size: 6vh;
+    -webkit-text-stroke: 12px var(--blue);
+}
+
+#loading_press2 {
+    margin-top: 60vh;
+    font-size: 6vh;
+}
+
+.loading_player {
+    margin-top: 75vh;
+    font-size: 4vh;
+    text-align: center;
+}
+
+#loading_player1 {
+    -webkit-text-stroke: 12px var(--blue);
+    transform: translateX(-30vh);
+}
+
+#loading_player12 {
+    transform: translateX(-30vh);
+}
+
+#loading_player2 {
+    -webkit-text-stroke: 12px var(--red);
+    transform: translateX(30vh);
+}
+
+#loading_player22 {
+    transform: translateX(30vh);
+}
+
+
+/*/////////////////////////////////////////////////////////////////////////////////////////////////
+////                                      TUTORIAL SCENES                                      ////
+/////////////////////////////////////////////////////////////////////////////////////////////////*/
+
+#tutorial1_container,
+#tutorial2_container {
+    display: flex;
+    justify-content: center;
+}
+
+#tutorial1_container>*,
+#tutorial2_container>* {
+    position: absolute;
+}
+
+#tutorial1_container>img,
+#tutorial2_container>img {
+    height: 100vh;
+}
+
+.tutorial_player {
+    margin-top: 85vh;
+    margin-left: 35vh;
+    font-size: 4vh;
+    text-align: center;
+}
+
+#tutorial1_player1,
+#tutorial2_player1 {
+    -webkit-text-stroke: 12px var(--blue);
+    transform: translateX(-24vh);
+}
+
+#tutorial1_player12,
+#tutorial2_player12 {
+    transform: translateX(-24vh);
+}
+
+#tutorial1_player2,
+#tutorial2_player2 {
+    -webkit-text-stroke: 12px var(--red);
+    transform: translateX(24vh);
+}
+
+#tutorial1_player22,
+#tutorial2_player22 {
+    transform: translateX(24vh);
+}
+
+
+/*/////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                        READY SCENE                                        ////
 /////////////////////////////////////////////////////////////////////////////////////////////////*/
 
@@ -105,12 +208,13 @@ body {
 
 #ready_text_container1,
 #ready_text_container2 {
-    font-size: 3.5vh;
+    font-size: 5vh;
     width: 100%;
-    margin-top: -23vh;
+    margin-top: -25vh;
+    margin-left: -2vh;
     padding: 0 54vh;
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 #ready_text_container1 {
@@ -141,6 +245,22 @@ body {
     font-size: 3.5vh;
     text-align: right;
     color: var(--red);
+}
+
+#ready_vs_container {
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    left: 0;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#ready_vs_container>img {
+    position: absolute;
+    height: 18vh;
 }
 
 

@@ -1,6 +1,7 @@
 let scenes = {
     loading: true,
-    tutorial: false,
+    tutorial1: false,
+    tutorial2: false,
     ready: false,
     game: false,
     finished: false,
@@ -35,6 +36,7 @@ const resetGame = () => {
 // main code loop
 let timerStarted = false;
 let timeUp = false;
+let readyScenePlayed = false;
 const mainLoop = () => {
 
     // hide vs show parents of the scenes in the DOM
@@ -67,10 +69,14 @@ const mainLoop = () => {
             console.log('loading scene');
 
             let p1TextLoading = curSceneDOM.querySelector('#loading_player1');
+            let p1TextLoading2 = curSceneDOM.querySelector('#loading_player12');
             let p2TextLoading = curSceneDOM.querySelector('#loading_player2');
+            let p2TextLoading2 = curSceneDOM.querySelector('#loading_player22');
 
             gyro.p1.t ? p1TextLoading.textContent = 'PLAYER 1 READY' : p1TextLoading.textContent = 'PLAYER 1 WAITING...';
+            gyro.p1.t ? p1TextLoading2.textContent = 'PLAYER 1 READY' : p1TextLoading2.textContent = 'PLAYER 1 WAITING...';
             gyro.p2.t ? p2TextLoading.textContent = 'PLAYER 2 READY' : p2TextLoading.textContent = 'PLAYER 2 WAITING...';
+            gyro.p2.t ? p2TextLoading2.textContent = 'PLAYER 2 READY' : p2TextLoading2.textContent = 'PLAYER 2 WAITING...';
 
             // completely insane line:
             // if either is true:
@@ -78,7 +84,7 @@ const mainLoop = () => {
             // p2 is starting to press (now is true, prev is false) and p1 is already pressing
             if ((gyro.p1.t && !gyro.p1.tPrev && gyro.p2.t) || (gyro.p2.t && !gyro.p2.tPrev && gyro.p1.t)) {
                 scenes.loading = false;
-                scenes.tutorial = true;
+                scenes.tutorial1 = true;
             }
 
             break;
@@ -90,19 +96,43 @@ const mainLoop = () => {
 
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////
-            ////                                      TUTORIAL SCENE                                       ////
+            ////                                      TUTORIAL SCENES                                      ////
             ///////////////////////////////////////////////////////////////////////////////////////////////////
-        case 'tutorial':
-            console.log('turorial scene');
+        case 'tutorial1':
+            console.log('turorial1 scene');
 
-            let p1TextTurorial = curSceneDOM.querySelector('#tutorial_player1');
-            let p2TextTurorial = curSceneDOM.querySelector('#tutorial_player2');
+            let p1TextTurorial1 = curSceneDOM.querySelector('#tutorial1_player1');
+            let p1TextTurorial12 = curSceneDOM.querySelector('#tutorial1_player12');
+            let p2TextTurorial1 = curSceneDOM.querySelector('#tutorial1_player2');
+            let p2TextTurorial12 = curSceneDOM.querySelector('#tutorial1_player22');
 
-            gyro.p1.t ? p1TextTurorial.textContent = 'PLAYER 1 READY' : p1TextTurorial.textContent = 'PLAYER 1 WAITING...';
-            gyro.p2.t ? p2TextTurorial.textContent = 'PLAYER 2 READY' : p2TextTurorial.textContent = 'PLAYER 2 WAITING...';
+            gyro.p1.t ? p1TextTurorial1.textContent = 'PLAYER 1 READY' : p1TextTurorial1.textContent = 'PLAYER 1 WAITING...';
+            gyro.p1.t ? p1TextTurorial12.textContent = 'PLAYER 1 READY' : p1TextTurorial12.textContent = 'PLAYER 1 WAITING...';
+            gyro.p2.t ? p2TextTurorial1.textContent = 'PLAYER 2 READY' : p2TextTurorial1.textContent = 'PLAYER 2 WAITING...';
+            gyro.p2.t ? p2TextTurorial12.textContent = 'PLAYER 2 READY' : p2TextTurorial12.textContent = 'PLAYER 2 WAITING...';
 
             if (gyro.p1.t && !gyro.p1.tPrev && gyro.p2.t || gyro.p2.t && !gyro.p2.tPrev && gyro.p1.t) {
-                scenes.tutorial = false;
+                scenes.tutorial1 = false;
+                scenes.tutorial2 = true;
+            }
+
+            break;
+
+        case 'tutorial2':
+            console.log('turorial2 scene');
+
+            let p1TextTurorial2 = curSceneDOM.querySelector('#tutorial2_player1');
+            let p1TextTurorial22 = curSceneDOM.querySelector('#tutorial2_player12');
+            let p2TextTurorial2 = curSceneDOM.querySelector('#tutorial2_player2');
+            let p2TextTurorial22 = curSceneDOM.querySelector('#tutorial2_player22');
+
+            gyro.p1.t ? p1TextTurorial2.textContent = 'PLAYER 1 READY' : p1TextTurorial2.textContent = 'PLAYER 1 WAITING...';
+            gyro.p1.t ? p1TextTurorial22.textContent = 'PLAYER 1 READY' : p1TextTurorial22.textContent = 'PLAYER 1 WAITING...';
+            gyro.p2.t ? p2TextTurorial2.textContent = 'PLAYER 2 READY' : p2TextTurorial2.textContent = 'PLAYER 2 WAITING...';
+            gyro.p2.t ? p2TextTurorial22.textContent = 'PLAYER 2 READY' : p2TextTurorial22.textContent = 'PLAYER 2 WAITING...';
+
+            if (gyro.p1.t && !gyro.p1.tPrev && gyro.p2.t || gyro.p2.t && !gyro.p2.tPrev && gyro.p1.t) {
+                scenes.tutorial2 = false;
                 scenes.ready = true;
             }
 
@@ -121,16 +151,111 @@ const mainLoop = () => {
         case 'ready':
             console.log('ready scene');
 
-            let p1TextReady = curSceneDOM.querySelector('#ready_text1_player1');
-            let p2TextReady = curSceneDOM.querySelector('#ready_text2_player2');
+            if (!readyScenePlayed) {
+                readyScenePlayed = true;
 
-            gyro.p1.t ? p1TextReady.textContent = 'READY!' : p1TextReady.textContent = 'WAITING...';
-            gyro.p2.t ? p2TextReady.textContent = 'READY!' : p2TextReady.textContent = 'WAITING...';
+                let fade = 'cubicBezier(.2,.6,.2,.7)';
 
-            if (gyro.p1.t && !gyro.p1.tPrev && gyro.p2.t || gyro.p2.t && !gyro.p2.tPrev && gyro.p1.t) {
-                scenes.ready = false;
-                scenes.game = true;
+                // animation of player 1
+                anime({
+                    targets: '#ready_player1_container',
+                    opacity: [
+                        { value: 0, duration: 0, easing: 'linear' },
+                        { value: 1, duration: 1500, easing: fade },
+                    ],
+                    translateX: [
+                        { value: '-15vh', duration: 0, easing: 'linear' },
+                        { value: 0, duration: 7000, easing: fade },
+                    ],
+                });
+
+                // animation of vs sign
+                anime({
+                    targets: '#ready_vs',
+                    opacity: [
+                        { value: 0, duration: 0, easing: 'linear' },
+                        { value: 1, duration: 1500, easing: fade, delay: 1000 },
+                        { value: 0, duration: 100, easing: fade, delay: 1500 },
+                    ],
+                    translateY: [
+                        { value: '-7vh', duration: 0, easing: 'linear' },
+                        { value: '1vh', duration: 6000, easing: fade, delay: 750 },
+                    ],
+                });
+
+                // animation of player 1
+                anime({
+                    targets: '#ready_player2_container',
+                    opacity: [
+                        { value: 0, duration: 0, easing: 'linear' },
+                        { value: 1, duration: 1500, easing: fade, delay: 2000 },
+                    ],
+                    translateX: [
+                        { value: '15vh', duration: 0, easing: 'linear' },
+                        { value: 0, duration: 6000, easing: fade, delay: 2000 },
+                    ],
+                });
+
+                // animation of 3
+                anime({
+                    targets: '#ready_3',
+                    opacity: [
+                        { value: 0, duration: 0, easing: 'linear' },
+                        { value: 1, duration: 200, easing: fade, delay: 4000 },
+                        { value: 0, duration: 200, easing: fade, delay: 800 },
+                    ],
+                    scale: [
+                        { value: 1.5, duration: 0, easing: 'linear' },
+                        { value: 1, duration: 1000, easing: fade, delay: 4000 },
+                    ],
+                });
+
+                // animation of 2
+                anime({
+                    targets: '#ready_2',
+                    opacity: [
+                        { value: 0, duration: 0, easing: 'linear' },
+                        { value: 1, duration: 200, easing: fade, delay: 5000 },
+                        { value: 0, duration: 200, easing: fade, delay: 800 },
+                    ],
+                    scale: [
+                        { value: 1.5, duration: 0, easing: 'linear' },
+                        { value: 1, duration: 1000, easing: fade, delay: 5000 },
+                    ],
+                });
+
+                // animation of 1
+                anime({
+                    targets: '#ready_1',
+                    opacity: [
+                        { value: 0, duration: 0, easing: 'linear' },
+                        { value: 1, duration: 200, easing: fade, delay: 6000 },
+                        { value: 0, duration: 200, easing: fade, delay: 800 },
+                    ],
+                    scale: [
+                        { value: 1.5, duration: 0, easing: 'linear' },
+                        { value: 1, duration: 1000, easing: fade, delay: 6000 },
+                    ],
+                });
+
+                setTimeout(() => {
+                    scenes.ready = false;
+                    scenes.game = true;
+                }, 7000);
             }
+
+
+
+            // let p1TextReady = curSceneDOM.querySelector('#ready_text1_player1');
+            // let p2TextReady = curSceneDOM.querySelector('#ready_text2_player2');
+
+            // gyro.p1.t ? p1TextReady.textContent = 'READY!' : p1TextReady.textContent = 'WAITING...';
+            // gyro.p2.t ? p2TextReady.textContent = 'READY!' : p2TextReady.textContent = 'WAITING...';
+
+            // if (gyro.p1.t && !gyro.p1.tPrev && gyro.p2.t || gyro.p2.t && !gyro.p2.tPrev && gyro.p1.t) {
+            //     scenes.ready = false;
+            //     scenes.game = true;
+            // }
 
             break;
 

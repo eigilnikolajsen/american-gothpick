@@ -45,7 +45,7 @@ const getGyroVariables = (val) => {
 let connectButton = document.querySelector('#serial_check');
 connectButton.addEventListener('click', async() => {
 
-    connectButton.textContent = 'waiting for connection...'
+    connectButton.textContent = 'waiting...'
 
     // Filter on devices with the Arduino Uno USB Vendor/Product IDs.
     const filters = [
@@ -64,9 +64,6 @@ connectButton.addEventListener('click', async() => {
     const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
     const reader = textDecoder.readable.getReader();
 
-    // Start the main animation loop
-    animationToggle = true;
-    animationLoop = window.requestAnimationFrame(mainLoop);
 
     // Listen to data coming from the serial device.
     let valuePrint = '';
@@ -90,12 +87,18 @@ connectButton.addEventListener('click', async() => {
         valuePrint = valuePrint.split(lb)[0];
         getGyroVariables(valuePrint);
 
-        // print out values to the console
+        // start main loop when everything is loaded
         if (consoleReady && gyro.p1.r != 0) {
             console.log('ARDUINO DATA READY');
             connectButton.style.visibility = 'hidden';
             consoleReady = false;
+
+            // Start the main animation loop
+            animationToggle = true;
+            animationLoop = window.requestAnimationFrame(mainLoop);
         }
+
+        // print out values to the console
         //console.log(valuePrint.split('%'));
 
         // Reset valuePrint before next loop
