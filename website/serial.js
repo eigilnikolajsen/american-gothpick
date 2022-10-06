@@ -45,7 +45,7 @@ const getGyroVariables = (val) => {
 let connectButton = document.querySelector('#serial_check');
 connectButton.addEventListener('click', async() => {
 
-    connectButton.textContent = 'waiting...'
+    connectButton.textContent = 'choose port...'
 
     // Filter on devices with the Arduino Uno USB Vendor/Product IDs.
     const filters = [
@@ -55,6 +55,9 @@ connectButton.addEventListener('click', async() => {
 
     // Prompt user to select an Arduino Uno device.
     const port = await navigator.serial.requestPort({ filters });
+
+
+    connectButton.textContent = 'calibrating...'
 
     // Wait for the serial port to open.
     await port.open({ baudRate: 115200 });

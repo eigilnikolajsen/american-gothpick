@@ -22,8 +22,8 @@
     <main id="container">
         <div id="wrapper">
             <section id="loading_container">
-                <img id="loading_bg" src="img/ready_bg.png" alt="ready background, edited">
-                <img id="loading_logo" src="img/loading_logo.png" alt="ready background, edited">
+                <img class="bg" id="loading_bg" src="img/ready_bg.png" alt="ready background, edited">
+                <img class="bg" id="loading_logo" src="img/loading_logo.png" alt="ready background, edited">
                 <p id="loading_press">Press buttons to start</p>
                 <p id="loading_press2">Press buttons to start</p>
                 <p class="loading_player" id="loading_player1"></p>
@@ -32,21 +32,21 @@
                 <p class="loading_player" id="loading_player22"></p>
             </section>
             <section id="tutorial1_container">
-                <img id="tutorial1_bg" src="img/tutorial1_bg.png" alt="Tutorial background, edited">
+                <img class="bg" id="tutorial1_bg" src="img/tutorial1_bg.png" alt="Tutorial background, edited">
                 <p class="tutorial_player" id="tutorial1_player1"></p>
                 <p class="tutorial_player" id="tutorial1_player12"></p>
                 <p class="tutorial_player" id="tutorial1_player2"></p>
                 <p class="tutorial_player" id="tutorial1_player22"></p>
             </section>
             <section id="tutorial2_container">
-                <img id="tutorial2_bg" src="img/tutorial2_bg.png" alt="Tutorial background, edited">
+                <img class="bg" id="tutorial2_bg" src="img/tutorial2_bg.png" alt="Tutorial background, edited">
                 <p class="tutorial_player" id="tutorial2_player1"></p>
                 <p class="tutorial_player" id="tutorial2_player12"></p>
                 <p class="tutorial_player" id="tutorial2_player2"></p>
                 <p class="tutorial_player" id="tutorial2_player22"></p>
             </section>
             <section id="ready_container">
-                <img id="ready_bg" src="img/ready_bg.png" alt="ready bg">
+                <img class="bg" id="ready_bg" src="img/ready_bg.png" alt="ready bg">
                 <div id="ready_players_container">
                     <div id="ready_player1_container">
                         <img id="ready_player1" src="img/ready_player1.png" alt="ready player1 bg">
@@ -69,27 +69,31 @@
                 </div>
             </section>
             <section id="game_container">
-                <div id="game_ui_container">
-                    <div id="game_ui_player1_container">
-                        <img src="img/game_player1_icon.png" alt="player 1 icon" id="game_ui_player1_icon">
-                        <p id="game_ui_player1_title">player 1</p>
-                        <p id="game_ui_player1_score"></p>
-                    </div>
-                    <p id="game_ui_timer"></p>
-                    <div id="game_ui_player1_container">
-                        <img src="img/game_player1_icon.png" alt="player 1 icon" id="game_ui_player1_icon">
-                        <p id="game_ui_player1_title">player 1</p>
-                        <p id="game_ui_player1_score"></p>
-                    </div>
-                </div>
                 <div id="game_bg_container">
-                    <img id="game_bg" src="img/ag_bg.png" alt="American Gothic background, edited">
+                    <img class="bg" id="game_bg" src="img/ag_bg.png" alt="American Gothic background, edited">
                 </div>
                 <div id="game_rive_container">
-                    <img id="game_rive" src="img/ag_rive.png" alt="American Gothic foreground, edited">
+                    <img class="bg" id="game_rive" src="img/ag_rive.png" alt="American Gothic foreground, edited">
                 </div>
                 <div id="game_greb_container">
-                    <img id="game_greb" src="img/ag_greb.png" alt="American Gothic foreground, edited">
+                    <img class="bg" id="game_greb" src="img/ag_greb.png" alt="American Gothic foreground, edited">
+                </div>
+                <div id="game_ui_container">
+                    <div id="game_ui_player1_container">
+                        <p id="game_ui_player1_title">player 1</p>
+                        <p id="game_ui_player1_score">0 points</p>
+                        <img src="img/game_player1_icon.png" alt="player 1 icon" id="game_ui_player1_icon">
+                    </div>
+                    <p id="game_ui_timer">00:30</p>
+                    <div id="game_ui_player2_container">
+                        <p id="game_ui_player2_title">player 2</p>
+                        <p id="game_ui_player2_score">0 points</p>
+                        <img src="img/game_player2_icon.png" alt="player 2 icon" id="game_ui_player2_icon">
+                    </div>
+                </div>
+                <div id="game_win_container">
+                    <p id="game_win_player"></p>
+                    <img id="game_win_text" src="img/game_win_text.png" alt="win text">
                 </div>
             </section>
             <section id="finished_container">
@@ -97,7 +101,9 @@
             </section>
         </div>
     </main>
-    <button id="serial_check">connect</button>
+    <div id="serial_container">
+        <button id="serial_check">connect</button>
+    </div>
 </body>
 
 </html>

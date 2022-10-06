@@ -37,7 +37,11 @@ const resetGame = () => {
 let timerStarted = false;
 let timeUp = false;
 let readyScenePlayed = false;
+let counter = 0;
 const mainLoop = () => {
+    counter++;
+
+    // if (counter % 6 == 0) {
 
     // hide vs show parents of the scenes in the DOM
     let curScene;
@@ -155,6 +159,7 @@ const mainLoop = () => {
                 readyScenePlayed = true;
 
                 let fade = 'cubicBezier(.2,.6,.2,.7)';
+                //fade = 'steps(10)';
 
                 // animation of player 1
                 anime({
@@ -241,7 +246,7 @@ const mainLoop = () => {
                 setTimeout(() => {
                     scenes.ready = false;
                     scenes.game = true;
-                }, 7000);
+                }, 7000); // set back to 7000
             }
 
 
@@ -285,9 +290,30 @@ const mainLoop = () => {
 
             // if time runs out
             if (timeUp) {
-                console.log('game finished');
-                console.log(`player 1 score: ${gyro.p1.score}`);
-                console.log(`player 2 score: ${gyro.p2.score}`);
+                animationToggle = false;
+
+                let winPlayer = document.querySelector('#game_win_player');
+                if (gyro.p1.score > gyro.p2.score) {
+                    winPlayer.textContent = 'player 1';
+                }
+                if (gyro.p2.score > gyro.p1.score) {
+                    winPlayer.textContent = 'player 2';
+                }
+                if (gyro.p2.score == gyro.p1.score) {
+                    winPlayer.textContent = 'nobody';
+                }
+
+                anime({
+                    targets: '#game_win_container',
+                    opacity: 1,
+                    scale: [
+                        { value: 1.5, duration: 0 },
+                        { value: 1, duration: 1000, delay: 0 },
+                    ],
+                    easing: 'steps(10)',
+                    duration: 1000,
+                });
+
                 break;
             }
 
@@ -370,7 +396,7 @@ const mainLoop = () => {
     gyro.p2.tPrev = gyro.p2.t;
 
 
-
+    // }
 
 
 
@@ -385,14 +411,18 @@ let animationToggle = false;
 let animationLoop;
 
 const checkForHit = (pNum) => {
-    let strikeMargin = 0.2;
-    let strikeP1 = 20;
+    let strikeMargin = 1;
+    let strikeP1 = 39.7;
     let strikeP2 = -19.8;
     switch (pNum) {
         case 1:
             if (gyro.p1.r < strikeP1 + strikeMargin && gyro.p1.r > strikeP1 - strikeMargin) {
                 gyro.p1.score += 1;
                 console.log('p1 hits! score: ' + gyro.p1.score);
+                let points = document.querySelector("#game_ui_player1_score");
+                let pointsStr = ' points';
+                // if (gyro.p1.score == 1) pointsStr = ' point';
+                points.textContent = gyro.p1.score + pointsStr;
             }
             break;
 
@@ -400,6 +430,10 @@ const checkForHit = (pNum) => {
             if (gyro.p2.r < strikeP2 + strikeMargin && gyro.p2.r > strikeP2 - strikeMargin) {
                 gyro.p2.score += 1;
                 console.log('p2 hits! score: ' + gyro.p2.score);
+                let points = document.querySelector("#game_ui_player2_score");
+                let pointsStr = ' points';
+                // if (gyro.p2.score == 1) pointsStr = ' point';
+                points.textContent = gyro.p2.score + pointsStr;
             }
             break;
     }
@@ -410,12 +444,14 @@ const strikeAnimation = (pNum) => {
     let backDur = 300;
     let forEase = 'cubicBezier(.7,-0.3,.8,1)';
     let backEase = 'cubicBezier(.2,0,.7,1)';
+    // forEase = 'steps(2)';
+    // backEase = 'steps(4)';
     switch (pNum) {
         case 1:
             anime({
                 targets: '#game_rive',
                 translateY: [
-                    { value: '-14vh', duration: forDur, easing: forEase },
+                    { value: '-5.2vh', duration: forDur, easing: forEase },
                     { value: 0, duration: backDur, easing: backEase },
                 ],
             });
@@ -434,12 +470,21 @@ const strikeAnimation = (pNum) => {
 }
 
 const timerFunction = () => {
-    var sec = 59;
+    var sec = 29; // set back to 29
     var timer = setInterval(() => {
-        var timerDOM = document.querySelector('#game_timer')
+        var timerDOM = document.querySelector('#game_ui_timer')
+
         timerDOM.textContent = '00:' + sec;
+
+        if (sec < 10) {
+            timerDOM.classList.add('timer_low');
+            timerDOM.textContent = '00:0' + sec;
+        } else {
+            timerDOM.classList.remove('timer_low');
+        }
+
         sec--;
-        sec < 11 ? timerDOM.classList.add('timer_low') : timerDOM.classList.remove('timer_low');
+
         if (sec < 0) {
             timeUp = true;
             clearInterval(timer)
