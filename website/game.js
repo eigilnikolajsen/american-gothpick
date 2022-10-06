@@ -37,11 +37,9 @@ const resetGame = () => {
 let timerStarted = false;
 let timeUp = false;
 let readyScenePlayed = false;
-let counter = 0;
-const mainLoop = () => {
-    counter++;
+const fps = 12;
 
-    // if (counter % 6 == 0) {
+function mainLoop(t) {
 
     // hide vs show parents of the scenes in the DOM
     let curScene;
@@ -155,99 +153,21 @@ const mainLoop = () => {
         case 'ready':
             console.log('ready scene');
 
-            if (!readyScenePlayed) {
-                readyScenePlayed = true;
+            //if (!readyScenePlayed) {
+            readyScenePlayed = true;
 
-                let fade = 'cubicBezier(.2,.6,.2,.7)';
-                //fade = 'steps(10)';
+            ani.player1.tick(t);
+            ani.vsSign.tick(t);
+            ani.player2.tick(t);
+            ani.sign3.tick(t);
+            ani.sign2.tick(t);
+            ani.sign1.tick(t);
 
-                // animation of player 1
-                anime({
-                    targets: '#ready_player1_container',
-                    opacity: [
-                        { value: 0, duration: 0, easing: 'linear' },
-                        { value: 1, duration: 1500, easing: fade },
-                    ],
-                    translateX: [
-                        { value: '-15vh', duration: 0, easing: 'linear' },
-                        { value: 0, duration: 7000, easing: fade },
-                    ],
-                });
-
-                // animation of vs sign
-                anime({
-                    targets: '#ready_vs',
-                    opacity: [
-                        { value: 0, duration: 0, easing: 'linear' },
-                        { value: 1, duration: 1500, easing: fade, delay: 1000 },
-                        { value: 0, duration: 100, easing: fade, delay: 1500 },
-                    ],
-                    translateY: [
-                        { value: '-7vh', duration: 0, easing: 'linear' },
-                        { value: '1vh', duration: 6000, easing: fade, delay: 750 },
-                    ],
-                });
-
-                // animation of player 1
-                anime({
-                    targets: '#ready_player2_container',
-                    opacity: [
-                        { value: 0, duration: 0, easing: 'linear' },
-                        { value: 1, duration: 1500, easing: fade, delay: 2000 },
-                    ],
-                    translateX: [
-                        { value: '15vh', duration: 0, easing: 'linear' },
-                        { value: 0, duration: 6000, easing: fade, delay: 2000 },
-                    ],
-                });
-
-                // animation of 3
-                anime({
-                    targets: '#ready_3',
-                    opacity: [
-                        { value: 0, duration: 0, easing: 'linear' },
-                        { value: 1, duration: 200, easing: fade, delay: 4000 },
-                        { value: 0, duration: 200, easing: fade, delay: 800 },
-                    ],
-                    scale: [
-                        { value: 1.5, duration: 0, easing: 'linear' },
-                        { value: 1, duration: 1000, easing: fade, delay: 4000 },
-                    ],
-                });
-
-                // animation of 2
-                anime({
-                    targets: '#ready_2',
-                    opacity: [
-                        { value: 0, duration: 0, easing: 'linear' },
-                        { value: 1, duration: 200, easing: fade, delay: 5000 },
-                        { value: 0, duration: 200, easing: fade, delay: 800 },
-                    ],
-                    scale: [
-                        { value: 1.5, duration: 0, easing: 'linear' },
-                        { value: 1, duration: 1000, easing: fade, delay: 5000 },
-                    ],
-                });
-
-                // animation of 1
-                anime({
-                    targets: '#ready_1',
-                    opacity: [
-                        { value: 0, duration: 0, easing: 'linear' },
-                        { value: 1, duration: 200, easing: fade, delay: 6000 },
-                        { value: 0, duration: 200, easing: fade, delay: 800 },
-                    ],
-                    scale: [
-                        { value: 1.5, duration: 0, easing: 'linear' },
-                        { value: 1, duration: 1000, easing: fade, delay: 6000 },
-                    ],
-                });
-
-                setTimeout(() => {
-                    scenes.ready = false;
-                    scenes.game = true;
-                }, 7000); // set back to 7000
-            }
+            setTimeout(() => {
+                scenes.ready = false;
+                scenes.game = true;
+            }, 7000); // set back to 7000
+            //}
 
 
 
@@ -310,9 +230,17 @@ const mainLoop = () => {
                         { value: 1.5, duration: 0 },
                         { value: 1, duration: 1000, delay: 0 },
                     ],
-                    easing: 'steps(10)',
+                    easing: 'steps(12)',
                     duration: 1000,
                 });
+
+                // setTimeout(() => {
+                //     resetGame();
+                //     scenes.game = false;
+                //     scenes.loading = true;
+                //     animationToggle = true;
+                //     animationLoop = window.requestAnimationFrame(mainLoop);
+                // }, 5000);
 
                 break;
             }
@@ -395,14 +323,11 @@ const mainLoop = () => {
     gyro.p1.tPrev = gyro.p1.t;
     gyro.p2.tPrev = gyro.p2.t;
 
-
-    // }
-
-
-
     // loop da loop
     if (animationToggle) {
-        window.requestAnimationFrame(mainLoop)
+        setTimeout(() => {
+            animationLoop = window.requestAnimationFrame(mainLoop);
+        }, 1000 / fps);
     } else {
         window.cancelAnimationFrame(animationLoop)
     }
@@ -444,8 +369,8 @@ const strikeAnimation = (pNum) => {
     let backDur = 300;
     let forEase = 'cubicBezier(.7,-0.3,.8,1)';
     let backEase = 'cubicBezier(.2,0,.7,1)';
-    // forEase = 'steps(2)';
-    // backEase = 'steps(4)';
+    forEase = 'steps(2)';
+    backEase = 'steps(4)';
     switch (pNum) {
         case 1:
             anime({
@@ -476,9 +401,9 @@ const timerFunction = () => {
 
         timerDOM.textContent = '00:' + sec;
 
-        if (sec < 10) {
+        if (sec < 10) timerDOM.textContent = '00:0' + sec;
+        if (sec < 11) {
             timerDOM.classList.add('timer_low');
-            timerDOM.textContent = '00:0' + sec;
         } else {
             timerDOM.classList.remove('timer_low');
         }
@@ -490,4 +415,86 @@ const timerFunction = () => {
             clearInterval(timer)
         };
     }, 1000);
+}
+
+
+
+let fade = 'cubicBezier(.2,.6,.2,.7)';
+const ani = {
+    player1: anime({
+        targets: '#ready_player1_container',
+        opacity: [
+            { value: 0, duration: 0, easing: 'linear' },
+            { value: 1, duration: 1500, easing: fade },
+        ],
+        translateX: [
+            { value: '-15vh', duration: 0, easing: 'linear' },
+            { value: 0, duration: 7000, easing: fade },
+        ],
+        autoplay: false,
+    }),
+    vsSign: anime({
+        targets: '#ready_vs',
+        opacity: [
+            { value: 0, duration: 0, easing: 'linear' },
+            { value: 1, duration: 1500, easing: fade, delay: 1000 },
+            { value: 0, duration: 100, easing: fade, delay: 1500 },
+        ],
+        translateY: [
+            { value: '-7vh', duration: 0, easing: 'linear' },
+            { value: '1vh', duration: 6000, easing: fade, delay: 750 },
+        ],
+        autoplay: false,
+    }),
+    player2: anime({
+        targets: '#ready_player2_container',
+        opacity: [
+            { value: 0, duration: 0, easing: 'linear' },
+            { value: 1, duration: 1500, easing: fade, delay: 2000 },
+        ],
+        translateX: [
+            { value: '15vh', duration: 0, easing: 'linear' },
+            { value: 0, duration: 6000, easing: fade, delay: 2000 },
+        ],
+        autoplay: false,
+    }),
+    sign3: anime({
+        targets: '#ready_3',
+        opacity: [
+            { value: 0, duration: 0, easing: 'linear' },
+            { value: 1, duration: 200, easing: fade, delay: 4000 },
+            { value: 0, duration: 200, easing: fade, delay: 800 },
+        ],
+        scale: [
+            { value: 1.5, duration: 0, easing: 'linear' },
+            { value: 1, duration: 1000, easing: fade, delay: 4000 },
+        ],
+        autoplay: false,
+    }),
+    sign2: anime({
+        targets: '#ready_2',
+        opacity: [
+            { value: 0, duration: 0, easing: 'linear' },
+            { value: 1, duration: 200, easing: fade, delay: 5000 },
+            { value: 0, duration: 200, easing: fade, delay: 800 },
+        ],
+        scale: [
+            { value: 1.5, duration: 0, easing: 'linear' },
+            { value: 1, duration: 1000, easing: fade, delay: 5000 },
+        ],
+        autoplay: false,
+    }),
+    sign1: anime({
+        targets: '#ready_1',
+        opacity: [
+            { value: 0, duration: 0, easing: 'linear' },
+            { value: 1, duration: 200, easing: fade, delay: 6000 },
+            { value: 0, duration: 200, easing: fade, delay: 800 },
+        ],
+        scale: [
+            { value: 1.5, duration: 0, easing: 'linear' },
+            { value: 1, duration: 1000, easing: fade, delay: 6000 },
+        ],
+        autoplay: false,
+    }),
 }
