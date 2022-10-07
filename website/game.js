@@ -4,7 +4,6 @@ let scenes = {
     tutorial2: false,
     ready: false,
     game: false,
-    finished: false,
 }
 
 const resetGame = () => {
@@ -274,8 +273,8 @@ function mainLoop(t) {
             // control the rotation of weapons
             let rive = curSceneDOM.querySelector('#game_rive_container');
             let greb = curSceneDOM.querySelector('#game_greb_container');
-            let rotP1 = gyro.p1.r;
-            let rotP2 = gyro.p2.r;
+            let rotP1 = gyro.p1.y;
+            let rotP2 = gyro.p2.y;
             rive.style.transform = `rotate(${rotP1}deg)`;
             greb.style.transform = `rotate(${rotP2}deg)`;
 
@@ -325,19 +324,6 @@ function mainLoop(t) {
             }
 
             break;
-
-
-
-
-
-
-            ///////////////////////////////////////////////////////////////////////////////////////////////////
-            ////                                      FINISHED SCENE                                       ////
-            ///////////////////////////////////////////////////////////////////////////////////////////////////
-        case 'finished':
-            console.log('finished scene');
-
-            break;
     }
 
 
@@ -358,7 +344,7 @@ let animationLoop;
 
 const checkForHit = (pNum) => {
     let strikeMargin = 1;
-    let strikeP1 = 39.7;
+    let strikeP1 = 43;
     let strikeP2 = -19.8;
     let forDur = 150;
     let backDur = 300;
@@ -367,7 +353,7 @@ const checkForHit = (pNum) => {
     switch (pNum) {
         case 1:
             // if you strike within a certain angle, you hit
-            if (gyro.p1.r < strikeP1 + strikeMargin && gyro.p1.r > strikeP1 - strikeMargin) {
+            if (gyro.p1.y < strikeP1 + strikeMargin && gyro.p1.y > strikeP1 - strikeMargin) {
 
                 // score +1
                 gyro.p1.score += 1;
@@ -394,7 +380,7 @@ const checkForHit = (pNum) => {
 
         case 2:
             // if you strike within a certain angle, you hit
-            if (gyro.p2.r < strikeP2 + strikeMargin && gyro.p2.r > strikeP2 - strikeMargin) {
+            if (gyro.p2.y < strikeP2 + strikeMargin && gyro.p2.y > strikeP2 - strikeMargin) {
 
                 // score +1
                 gyro.p2.score += 1;
