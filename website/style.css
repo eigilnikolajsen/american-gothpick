@@ -6,6 +6,10 @@
     text-rendering: optimizeLegibility;
 }
 
+html {
+    filter: url("#pixelate")
+}
+
 *,
 body {
     font-family: 'pixel', sans-serif;
@@ -17,6 +21,7 @@ body {
     -ms-user-select: none;
     user-select: none;
     color: white;
+    letter-spacing: 0.2vh;
 }
 
 body {
@@ -86,7 +91,7 @@ body {
 
 
 /*/////////////////////////////////////////////////////////////////////////////////////////////////
-////                                         GAME SCENE                                        ////
+////                                       LOADING SCENE                                       ////
 /////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 #loading_container {
@@ -348,6 +353,7 @@ body {
 }
 
 #game_ui_player1_score {
+    letter-spacing: 0;
     width: 25vh;
     padding: 0 2vh .2vh 4vh;
     transform: translate(calc(0% + 5vh), 0);
@@ -355,6 +361,7 @@ body {
 }
 
 #game_ui_player2_score {
+    letter-spacing: 0;
     width: 25vh;
     padding: 0 4vh .2vh 2vh;
     transform: translate(calc(-100% - 5vh), 0);

@@ -30,6 +30,15 @@ const resetGame = () => {
             score: 0,
         },
     }
+
+    timerStarted = false;
+    timeUp = false;
+    readyScenePlayed = false;
+
+    scenes.game = false;
+    scenes.loading = true;
+    animationToggle = true;
+    animationLoop = window.requestAnimationFrame(mainLoop);
 }
 
 
@@ -37,7 +46,7 @@ const resetGame = () => {
 let timerStarted = false;
 let timeUp = false;
 let readyScenePlayed = false;
-const fps = 12;
+const fps = 10;
 
 function mainLoop(t) {
 
@@ -169,19 +178,6 @@ function mainLoop(t) {
             }, 7000); // set back to 7000
             //}
 
-
-
-            // let p1TextReady = curSceneDOM.querySelector('#ready_text1_player1');
-            // let p2TextReady = curSceneDOM.querySelector('#ready_text2_player2');
-
-            // gyro.p1.t ? p1TextReady.textContent = 'READY!' : p1TextReady.textContent = 'WAITING...';
-            // gyro.p2.t ? p2TextReady.textContent = 'READY!' : p2TextReady.textContent = 'WAITING...';
-
-            // if (gyro.p1.t && !gyro.p1.tPrev && gyro.p2.t || gyro.p2.t && !gyro.p2.tPrev && gyro.p1.t) {
-            //     scenes.ready = false;
-            //     scenes.game = true;
-            // }
-
             break;
 
 
@@ -236,11 +232,7 @@ function mainLoop(t) {
 
                 // setTimeout(() => {
                 //     resetGame();
-                //     scenes.game = false;
-                //     scenes.loading = true;
-                //     animationToggle = true;
-                //     animationLoop = window.requestAnimationFrame(mainLoop);
-                // }, 5000);
+                // }, 10000);
 
                 break;
             }
@@ -370,7 +362,7 @@ const strikeAnimation = (pNum) => {
     let forEase = 'cubicBezier(.7,-0.3,.8,1)';
     let backEase = 'cubicBezier(.2,0,.7,1)';
     forEase = 'steps(2)';
-    backEase = 'steps(4)';
+    backEase = 'steps(3)';
     switch (pNum) {
         case 1:
             anime({
