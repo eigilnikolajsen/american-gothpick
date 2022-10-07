@@ -79,6 +79,27 @@ function mainLoop(t) {
         case 'loading':
             console.log('loading scene');
 
+            // start audio
+            if (sfx.loading.music.paused || !sfx.loading.music.currentTime) {
+                sfx.loading.music.loop = true;
+                sfx.loading.music.volume = 0.3;
+                sfx.loading.music.play();
+            }
+
+            // if (gyro.p1.t && !gyro.p1.tPrev) {
+            //     if (sfx.button.player1.paused || !sfx.button.player1.currentTime) {
+            //         sfx.button.player1.play();
+            //     }
+            // }
+
+            // if (gyro.p2.t && !gyro.p2.tPrev) {
+            //     if (sfx.button.player2.paused || !sfx.button.player2.currentTime) {
+            //         sfx.button.player2.play();
+            //     }
+            // }
+
+
+
             let p1TextLoading = curSceneDOM.querySelector('#loading_player1');
             let p1TextLoading2 = curSceneDOM.querySelector('#loading_player12');
             let p2TextLoading = curSceneDOM.querySelector('#loading_player2');
@@ -162,8 +183,12 @@ function mainLoop(t) {
         case 'ready':
             console.log('ready scene');
 
-            //if (!readyScenePlayed) {
-            readyScenePlayed = true;
+            // start audio, pause previous one
+            if (sfx.game.music.paused || !sfx.game.music.currentTime) {
+                sfx.loading.music.pause();
+                sfx.game.music.volume = 0.3;
+                sfx.game.music.play();
+            }
 
             ani.player1.tick(t);
             ani.vsSign.tick(t);
@@ -176,7 +201,6 @@ function mainLoop(t) {
                 scenes.ready = false;
                 scenes.game = true;
             }, 7000); // set back to 7000
-            //}
 
             break;
 
@@ -208,6 +232,7 @@ function mainLoop(t) {
             if (timeUp) {
                 animationToggle = false;
 
+                // check who won
                 let winPlayer = document.querySelector('#game_win_player');
                 if (gyro.p1.score > gyro.p2.score) {
                     winPlayer.textContent = 'player 1';
@@ -219,6 +244,7 @@ function mainLoop(t) {
                     winPlayer.textContent = 'nobody';
                 }
 
+                // animate win container
                 anime({
                     targets: '#game_win_container',
                     opacity: 1,
@@ -230,6 +256,10 @@ function mainLoop(t) {
                     duration: 1000,
                 });
 
+                // play sound
+                sfx.game.win.play();
+
+                // reset game
                 // setTimeout(() => {
                 //     resetGame();
                 // }, 10000);
@@ -246,7 +276,6 @@ function mainLoop(t) {
             let greb = curSceneDOM.querySelector('#game_greb_container');
             let rotP1 = gyro.p1.r;
             let rotP2 = gyro.p2.r;
-            // if (gyro.z > 0) rot = 180 - gyro.y;
             rive.style.transform = `rotate(${rotP1}deg)`;
             greb.style.transform = `rotate(${rotP2}deg)`;
 
@@ -331,26 +360,62 @@ const checkForHit = (pNum) => {
     let strikeMargin = 1;
     let strikeP1 = 39.7;
     let strikeP2 = -19.8;
+    let forDur = 150;
+    let backDur = 300;
+    forEase = 'steps(2)';
+    backEase = 'steps(3)';
     switch (pNum) {
         case 1:
+            // if you strike within a certain angle, you hit
             if (gyro.p1.r < strikeP1 + strikeMargin && gyro.p1.r > strikeP1 - strikeMargin) {
+
+                // score +1
                 gyro.p1.score += 1;
                 console.log('p1 hits! score: ' + gyro.p1.score);
+
+                // update score in ui
                 let points = document.querySelector("#game_ui_player1_score");
                 let pointsStr = ' points';
-                // if (gyro.p1.score == 1) pointsStr = ' point';
                 points.textContent = gyro.p1.score + pointsStr;
+
+                // play sound
+                sfx.game.player2.ugh.play();
+
+                // play animation
+                anime({
+                    targets: '#game_player2_head',
+                    rotate: [
+                        { value: 30, duration: forDur, easing: forEase },
+                        { value: 0, duration: backDur, easing: backEase },
+                    ],
+                });
             }
             break;
 
         case 2:
+            // if you strike within a certain angle, you hit
             if (gyro.p2.r < strikeP2 + strikeMargin && gyro.p2.r > strikeP2 - strikeMargin) {
+
+                // score +1
                 gyro.p2.score += 1;
                 console.log('p2 hits! score: ' + gyro.p2.score);
+
+                // update score in ui
                 let points = document.querySelector("#game_ui_player2_score");
                 let pointsStr = ' points';
-                // if (gyro.p2.score == 1) pointsStr = ' point';
                 points.textContent = gyro.p2.score + pointsStr;
+
+                // play sound
+                sfx.game.player1.ugh.play();
+
+                // play animation
+                anime({
+                    targets: '#game_player1_head',
+                    rotate: [
+                        { value: -30, duration: forDur, easing: forEase },
+                        { value: 0, duration: backDur, easing: backEase },
+                    ],
+                });
             }
             break;
     }
@@ -365,6 +430,11 @@ const strikeAnimation = (pNum) => {
     backEase = 'steps(3)';
     switch (pNum) {
         case 1:
+
+            // play sound
+            sfx.game.player1.eject.play();
+
+            // animate weapon
             anime({
                 targets: '#game_rive',
                 translateY: [
@@ -372,9 +442,16 @@ const strikeAnimation = (pNum) => {
                     { value: 0, duration: backDur, easing: backEase },
                 ],
             });
+
             break;
 
         case 2:
+
+            // play sound
+            sfx.game.player2.eject.volume = 0.5;
+            sfx.game.player2.eject.play();
+
+            // animate weapon
             anime({
                 targets: '#game_greb',
                 translateY: [
@@ -382,6 +459,7 @@ const strikeAnimation = (pNum) => {
                     { value: 0, duration: backDur, delay: 0, easing: backEase },
                 ],
             });
+
             break;
     }
 }
@@ -489,4 +567,25 @@ const ani = {
         ],
         autoplay: false,
     }),
+}
+const sfx = {
+    loading: {
+        music: document.querySelector('#sfx_loading_music'),
+    },
+    game: {
+        music: document.querySelector('#sfx_game_music'),
+        win: document.querySelector('#sfx_game_win'),
+        player1: {
+            eject: document.querySelector('#sfx_game_player1_eject'),
+            ugh: document.querySelector('#sfx_game_player1_ugh'),
+        },
+        player2: {
+            eject: document.querySelector('#sfx_game_player2_eject'),
+            ugh: document.querySelector('#sfx_game_player2_ugh'),
+        },
+    },
+    button: {
+        player1: document.querySelector('#sfx_button_player1'),
+        player2: document.querySelector('#sfx_button_player2'),
+    },
 }

@@ -89,6 +89,10 @@ body {
     visibility: hidden;
 }
 
+#sound_container {
+    visibility: hidden;
+}
+
 
 /*/////////////////////////////////////////////////////////////////////////////////////////////////
 ////                                       LOADING SCENE                                       ////
@@ -300,6 +304,18 @@ body {
     height: 100vh;
 }
 
+#game_bg_container {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#game_bg_container>img {
+    position: absolute;
+}
+
 #game_greb,
 #game_greb_container {
     transform-origin: 51.25% 57.96%;
@@ -308,6 +324,14 @@ body {
 #game_rive,
 #game_rive_container {
     transform-origin: 29.28% 63.6%;
+}
+
+#game_player1_head {
+    transform-origin: 34.4% 26.3%;
+}
+
+#game_player2_head {
+    transform-origin: 64.2% 19.7%;
 }
 
 #game_ui_container {
