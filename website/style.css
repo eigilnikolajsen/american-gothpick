@@ -358,6 +358,7 @@ body {
     position: absolute;
     font-size: 3vh;
     margin-top: 0.5vh;
+    white-space: nowrap;
 }
 
 #game_ui_player1_title {
@@ -378,7 +379,7 @@ body {
 
 #game_ui_player1_score {
     letter-spacing: 0;
-    width: 25vh;
+    white-space: nowrap;
     padding: 0 2vh .2vh 4vh;
     transform: translate(calc(0% + 5vh), 0);
     background-color: var(--blue);
@@ -386,7 +387,7 @@ body {
 
 #game_ui_player2_score {
     letter-spacing: 0;
-    width: 25vh;
+    white-space: nowrap;
     padding: 0 4vh .2vh 2vh;
     transform: translate(calc(-100% - 5vh), 0);
     background-color: var(--red);

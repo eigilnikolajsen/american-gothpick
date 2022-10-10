@@ -39,8 +39,8 @@ const getGyroVariables = (val) => {
     gyro.p2.y = valSplit[6];
     valSplit[7].includes('2T') ? gyro.p2.t = true : gyro.p2.t = false;
 
-    let gyroOutput = `player 1: yaw: ${gyro.p1.y}, pitch: ${gyro.p1.p}, roll: ${gyro.p1.r}, button: ${gyro.p1.t}. player 2: yaw: ${gyro.p2.y}, pitch: ${gyro.p2.p}, roll: ${gyro.p2.r}, button: ${gyro.p2.t}.`;
-    //console.log(gyroOutput);
+    // let gyroOutput = `player 1: yaw: ${gyro.p1.y}, pitch: ${gyro.p1.p}, roll: ${gyro.p1.r}, button: ${gyro.p1.t}. player 2: yaw: ${gyro.p2.y}, pitch: ${gyro.p2.p}, roll: ${gyro.p2.r}, button: ${gyro.p2.t}.`;
+    // console.log(gyroOutput);
 }
 let connectButton = document.querySelector('#serial_check');
 connectButton.addEventListener('click', async() => {
@@ -54,57 +54,66 @@ connectButton.addEventListener('click', async() => {
     ];
 
     // Prompt user to select an Arduino Uno device.
-    const port = await navigator.serial.requestPort({ filters });
+    // const port = await navigator.serial.requestPort({ filters });
+    await navigator.serial.requestPort({ filters }).then(async(port) => {
 
 
-    connectButton.textContent = 'calibrating...'
+        connectButton.textContent = 'calibrating...'
 
-    // Wait for the serial port to open.
-    await port.open({ baudRate: 115200 });
+        // Wait for the serial port to open.
+        await port.open({ baudRate: 115200 });
 
-    // Decode the stream
-    const textDecoder = new TextDecoderStream();
-    const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
-    const reader = textDecoder.readable.getReader();
+        // Decode the stream
+        const textDecoder = new TextDecoderStream();
+        const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+        const reader = textDecoder.readable.getReader();
 
 
-    // Listen to data coming from the serial device.
-    let valuePrint = '';
-    let consoleReady = true;
-    while (true) {
-        const { value, done } = await reader.read();
-        if (done) {
-            // Allow the serial port to be closed later.
-            reader.releaseLock();
-            break;
+        // Listen to data coming from the serial device.
+        let valuePrint = '';
+        let consoleReady = true;
+        while (true) {
+            const { value, done } = await reader.read();
+            if (done) {
+                // Allow the serial port to be closed later.
+                reader.releaseLock();
+                break;
+            }
+            // Value is a string.
+            // Fill valuePrint with value
+            valuePrint += value;
+
+            // Check if value contains a linebreak
+            // If it does not; continue
+            // If it does; set valuePrint equal to everything before the linebreak
+            let lb = '\r\n'
+            if (!valuePrint.includes(lb)) continue;
+            valuePrint = valuePrint.split(lb)[0];
+            getGyroVariables(valuePrint);
+
+            // start main loop when everything is loaded
+            if (consoleReady && gyro.p1.r != 0) {
+                console.log('ARDUINO DATA READY');
+                connectButton.style.visibility = 'hidden';
+                consoleReady = false;
+
+                // Start the main animation loop
+                animationToggle = true;
+                animationLoop = window.requestAnimationFrame(mainLoop);
+            }
+
+            // print out values to the console
+            // console.log(valuePrint.split('%'));
+
+            // Reset valuePrint before next loop
+            valuePrint = '';
         }
-        // Value is a string.
-        // Fill valuePrint with value
-        valuePrint += value;
 
-        // Check if value contains a linebreak
-        // If it does not; continue
-        // If it does; set valuePrint equal to everything before the linebreak
-        let lb = '\r\n'
-        if (!valuePrint.includes(lb)) continue;
-        valuePrint = valuePrint.split(lb)[0];
-        getGyroVariables(valuePrint);
-
-        // start main loop when everything is loaded
-        if (consoleReady && gyro.p1.r != 0) {
-            console.log('ARDUINO DATA READY');
-            connectButton.style.visibility = 'hidden';
-            consoleReady = false;
-
-            // Start the main animation loop
-            animationToggle = true;
-            animationLoop = window.requestAnimationFrame(mainLoop);
-        }
-
-        // print out values to the console
-        //console.log(valuePrint.split('%'));
-
-        // Reset valuePrint before next loop
-        valuePrint = '';
-    }
+    }).catch((e) => {
+        console.log(e)
+        connectButton.textContent = 'no port selected'
+        setTimeout(() => {
+            connectButton.textContent = 'connect'
+        }, 2000)
+    })
 });
