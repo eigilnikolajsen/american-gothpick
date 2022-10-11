@@ -323,6 +323,18 @@ function mainLoop(t) {
                 setTimeout(() => gyro.p2.strike = true, cooldown);
             }
 
+
+
+
+            //////////////////////////////////////// CONTROL EYES ////////////////////////////////////////
+
+            let target = calcTarget();
+            moveEyes(target.p2[0], target.p2[1], 1);
+            moveEyes(target.p1[0], target.p1[1], 2);
+
+            //moveEyes(x, y)
+
+
             break;
     }
 
@@ -471,6 +483,49 @@ const timerFunction = () => {
             clearInterval(timer)
         };
     }, 1000);
+}
+
+const moveEyes = (mx, my, pNum) => {
+    document.querySelectorAll(`.p${pNum}_eye`).forEach((eye, i) => {
+        let eyeBound = eye.getBoundingClientRect();
+        let x = eyeBound.left + ((eyeBound.right - eyeBound.left) / 2);
+        let y = eyeBound.top + ((eyeBound.bottom - eyeBound.top) / 2) + document.documentElement.scrollTop;
+        let rad = Math.atan2(mx - x, my - y);
+        let rot = (rad * (180 / Math.PI) * -1) + 90;
+        if (pNum == 1) {
+            if (i == 0) eye.style.transform = `translate(-13.8vh, -21.2vh) rotate(${rot}deg)`;
+            if (i == 1) eye.style.transform = `translate(-18.7vh, -21.5vh) rotate(${rot}deg)`;
+        }
+        if (pNum == 2) {
+            if (i == 0) eye.style.transform = `translate(10.8vh, -29.2vh) rotate(${rot}deg)`;
+            if (i == 1) eye.style.transform = `translate(17.4vh, -29.3vh) rotate(${rot}deg)`;
+        }
+    })
+}
+
+const calcTarget = () => {
+    let target = {
+        p1: [0, 0],
+        p2: [0, 0],
+    };
+    let scale = 1.45;
+    let gameBG = document.querySelector('#game_bg');
+    let w = gameBG.offsetWidth * scale;
+    let riveLength = 0.5 * w;
+    let grebLength = 0.325 * w;
+    let rotP1 = [0.2928 * w, 0.636 * w];
+    let rotP2 = [0.5125 * w, 0.5796 * w];
+    let radRive = (gyro.p1.y - 100) * Math.PI / 180;
+    let radGreb = (gyro.p2.y - 89) * Math.PI / 180;
+    let pointP1 = [Math.cos(radRive) * riveLength + rotP1[0] - (w / 2) + (window.innerWidth / 2), Math.sin(radRive) * riveLength + rotP1[1]];
+    let pointP2 = [Math.cos(radGreb) * grebLength + rotP2[0] - (w / 2) + (window.innerWidth / 2), Math.sin(radGreb) * grebLength + rotP2[1]];
+    // document.querySelector('#testTarget1').style.transform = `translate(${pointP1[0]}px, ${pointP1[1]}px)`;
+    // document.querySelector('#testTarget2').style.transform = `translate(${pointP2[0]}px, ${pointP2[1]}px)`;
+    target.p1[0] = pointP1[0];
+    target.p1[1] = pointP1[1];
+    target.p2[0] = pointP2[0];
+    target.p2[1] = pointP2[1];
+    return target;
 }
 
 
