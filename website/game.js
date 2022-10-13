@@ -528,6 +528,18 @@ const calcTarget = () => {
     return target;
 }
 
+document.addEventListener('keydown', (e) => {
+    //console.log(e.key);
+
+    if (e.key == 'Backspace') {
+        location.reload();
+    }
+
+    if (e.key == 'Enter') {
+        openPort();
+    }
+
+});
 
 
 let fade = 'cubicBezier(.2,.6,.2,.7)';
